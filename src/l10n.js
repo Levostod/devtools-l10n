@@ -9,11 +9,11 @@ const { sprintf } = require("utils/sprintf.js");
 /**
  * Localization convenience methods.
  *
- * @param string bundleName
+ * @param string b
  *        The desired string bundle's name.
  */
-function LocalizationHelper(bundleName) {
-  this.bundleName = bundleName;
+function LocalizationHelper(b) {
+  this.bundleName = b;
 }
 
 LocalizationHelper.prototype = {
@@ -23,37 +23,37 @@ LocalizationHelper.prototype = {
    * @return {Object} parsed properties mapped in an object.
    */
   fetchBundle: async function() {
-    const propertiesFile = await fetch("raw!" + this.bundleName);
-    return parsePropertiesFile(propertiesFile);
+    const pf = await fetch("raw!" + this.bundleName);
+    return parsePropertiesFile(pf);
   },
 
   /**
    * L10N shortcut function. Can be used with a single string or an array of
    * strings.
    *
-   * @param {String|Array} name
+   * @param {String|Array} n
    * @return {String}
    */
-  getString: async function(name) {
-    if (Array.isArray(name)) {
-      const strings = [];
+  getString: async function(n) {
+    if (Array.isArray(n)) {
+      const s = [];
 
-      for (const i = 0; i < name.length; i++) {
-        const properties = await this.fetchBundle();
-        if (name[i] in properties) {
-          strings.push(properties[name]);
+      for (const i = 0; i < n.length; i++) {
+        const p = await this.fetchBundle();
+        if (n[i] in p) {
+          s.push(p[n]);
         } else {
-          throw new Error("No localization found for [" + name[i] + "]");
+          throw new Error("No localization found for [" + n[i] + "]");
         }
       }
-      return strings;
+      return s;
     }
 
-    const properties = await this.fetchBundle();
-    if (name in properties) {
-      return properties[name];
+    const p = await this.fetchBundle();
+    if (n in p) {
+      return p[n];
     }
-    throw new Error("No localization found for [" + name + "]");
+    throw new Error("No localization found for [" + n + "]");
   },
 
   /**
